@@ -1,0 +1,41 @@
+version: '3.9'
+
+networks:
+  music-network:
+    driver: bridge
+
+services:
+
+  webserver:
+    image: nginx:alpine
+    container_name: music-webserver
+    volumes:
+      - ./services:/var/www
+      - ./nginx/conf.d/:/etc/nginx/conf.d/
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "${PORT}:95"
+    networks:
+      - music-network
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "${REDIS_PORT}:6379"
+    hostname: redis
+    volumes:
+      - ./redis-volume:/data
+    networks:
+      - music-network
+
+  music-api:
+    build:
+      context: ./dockerfiles
+      dockerfile: slim.dockerfile
+    container_name: music-api
+    volumes:
+      - ./services/api-music-bands:/var/www
+    networks:
+      - music-network
+    command: /tmp/scripts/run.sh

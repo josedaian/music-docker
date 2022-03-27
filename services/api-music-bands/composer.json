@@ -1,0 +1,31 @@
+{
+	"name": "josedaian/api-music-bands",
+	"description": "Api que retorna información de una banda y su discografía",
+	"minimum-stability": "stable",
+	"license": "josedaian",
+	"authors": [
+		{
+			"name": "josedaian",
+			"email": "josedaian.cabrera@gmail.com"
+		}
+	],
+	"require": {
+		"slim/slim": "^3.0",
+		"vlucas/phpdotenv": "^5.4",
+		"guzzlehttp/guzzle": "^7.0",
+		"ext-json": "*",
+		"symfony/cache": "^5.4",
+		"predis/predis": "^1.1"
+	},
+	"autoload": {
+		"psr-4": {
+			"MusicBands\\": "src/"
+		},
+		"files": [
+			"src/Utils/helpers.php"
+		]
+	},
+	"require-dev": {
+		"symfony/var-dumper": "^5.4"
+	}
+}
