@@ -5,10 +5,11 @@ use GuzzleHttp\Exception\ClientException;
 use MusicBands\Exceptions\PublicException;
 use MusicBands\Models\Provider;
 use MusicBands\Models\Token;
+use MusicBands\Services\ApiClients\ApiConfigs\ApiConfig;
 use MusicBands\Services\ApiClients\ApiConfigs\SpotifyApiConfig;
+use MusicBands\Services\ApiClients\ApiJsonMappers\ApiJsonMapper;
 use MusicBands\Services\ApiClients\ApiJsonMappers\SpotifyJsonMapper;
 use MusicBands\Services\ApiClients\Contracts\MusicApiClient;
-use MusicBands\Services\RedisService;
 use stdClass;
 use Throwable;
 
@@ -19,10 +20,16 @@ use Throwable;
 class SpotifyApiClient extends ApiClient implements MusicApiClient
 {
     /** @var null|Token  */
-    private $token = null;
+    private $token;
     protected static $provider = Provider::SPOTIFY;
 
-    static function buildInstance(){
+    public function __construct(ApiConfig $config, ApiJsonMapper $mapper)
+    {
+        parent::__construct($config, $mapper);
+        $this->token = $this->redis->get($this->tokenCacheKey());
+    }
+
+    static function buildInstance(): SpotifyApiClient{
         return new SpotifyApiClient(SpotifyApiConfig::buildConfig(), new SpotifyJsonMapper);
     }
 
@@ -80,6 +87,9 @@ class SpotifyApiClient extends ApiClient implements MusicApiClient
             }, ['authApi' => true]);
 
             $this->token = $this->mapper->token($apiResponse);
+            $this->redis->remember($this->tokenCacheKey(), $this->token->getTimeRemaining(), function (){
+                return $this->token;
+            });
         }
     }
 
@@ -108,5 +118,9 @@ class SpotifyApiClient extends ApiClient implements MusicApiClient
         }
 
         return $requestOptions;
+    }
+
+    private function tokenCacheKey(): string {
+        return self::$provider.'-token-v4';
     }
 }

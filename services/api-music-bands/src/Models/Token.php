@@ -40,6 +40,10 @@ class Token extends Model
         return $this->getExpiresAt() < Utils::utcNow();
     }
 
+    public function getTimeRemaining(): int {
+        return $this->getExpiresAt()->getTimestamp() - Utils::utcNow()->getTimestamp();
+    }
+
     private function ensureHasValidType(int $type){
         if(!in_array($type, $this->validTypes)){
             throw PublicException::validationError(sprintf('El tipo (%s) no es soportodao', $type), 'bad_type.token');
