@@ -72,71 +72,11 @@ class PublicException extends Exception
         }
 
         $hintCode = null;
-
-        if ($exception instanceof MethodNotAllowedHttpException) {
-            $defaults = [
-                'text' => 'El método especificado para la solicitud no es válido.',
-                'infoCode' => 'bad_http_method',
-                'httpCode' => Response::HTTP_METHOD_NOT_ALLOWED
-            ];
-        } else if ($exception instanceof NotFoundHttpException) {
-            $defaults = [
-                'text' => 'Recurso no existe (URL): '.request()->path(),
-                'httpCode' => Response::HTTP_NOT_FOUND,
-                'infoCode' => 'not_found'
-            ];
-        } else if ($exception instanceof HttpException) {
-            $defaults = [
-                'text' => $exception->getMessage(),
-                'httpCode' => $exception->getStatusCode(),
-                'infoCode' => 'form_error'
-            ];
-        } else if($exception instanceof AuthenticationException){
-            $defaults = [
-                'text' => __('No autorizado'),
-                'infoCode' => 'auth.required'
-            ];
-        } else if ($exception instanceof QueryException) {
-            $dbErrorInfo = null;
-
-            $httpCode = Response::HTTP_INTERNAL_SERVER_ERROR;
-            $infoCode = 'db_error';
-            $text = 'Error de base de datos';
-            if( ($prev = $exception->getPrevious()) && ($prev instanceof PDOException) ){
-                /** @var PDOException $prev */
-                $dbErrorInfo = $prev->errorInfo;
-            }
-
-            if( $dbErrorInfo ){
-                $sqlState = $dbErrorInfo[0];
-                switch( $sqlState )
-                {
-                    case '23000':
-                        if( isset($dbErrorInfo[1]) && \intval($dbErrorInfo[1]) === 1062){
-                            $text .= ': Registro duplicado';
-                            $infoCode .= '.duplicate';
-                            $httpCode = Response::HTTP_BAD_REQUEST;
-                            $hintCode = self::HINT_DUPLICATE;
-                        }
-                        break;
-                }
-            }
-
-            $defaults = [
-                'text' => $text,
-                'httpCode' => $httpCode,
-                'infoCode' => $infoCode,
-                'data' => [
-                    'dbError' => $dbErrorInfo ? \implode(', ', $dbErrorInfo) : null
-                ]
-            ];
-        } else {
-            $defaults = [
-                'text' => \get_class($exception).': '.$exception->getMessage().' en '.$exception->getFile().'@'.$exception->getLine(),
-                'httpCode' => Response::HTTP_INTERNAL_SERVER_ERROR,
-                'infoCode' => 'exception.'.$exception->getCode()
-            ];
-        }
+        $defaults = [
+            'text' => \get_class($exception).': '.$exception->getMessage().' en '.$exception->getFile().'@'.$exception->getLine(),
+            'httpCode' => Response::HTTP_INTERNAL_SERVER_ERROR,
+            'infoCode' => 'exception.'.$exception->getCode()
+        ];
 
         $defaults['data']['type'] = \get_class($exception);
         $defaults['data']['file'] = $exception->getFile();

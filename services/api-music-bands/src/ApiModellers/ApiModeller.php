@@ -5,7 +5,7 @@ namespace MusicBands\ApiModellers;
 use MusicBands\Models\Model;
 
 abstract class ApiModeller{
-    public $resource, $model;
+    public $model;
 
     public function __construct(Model $model)
     {

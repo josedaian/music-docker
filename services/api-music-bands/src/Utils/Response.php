@@ -75,6 +75,10 @@ final class Response
         return (new static())->errorResponse($response, $message, $code, $httpCode);
     }
 
+    static function notAllowed(\Slim\Http\Response $response, $message = 'El método no es válido para la ruta solicitada', $code = 0, $httpCode = Response::HTTP_METHOD_NOT_ALLOWED){
+        return (new static())->errorResponse($response, $message, $code, $httpCode);
+    }
+
     static function internalError(\Slim\Http\Response $response, $message = 'Ha ocurrido un error interno', $code = 0, $httpCode = Response::HTTP_INTERNAL_SERVER_ERROR){
         return (new static())->errorResponse($response, $message, $code, $httpCode);
     }

@@ -15,6 +15,12 @@ return function ($app) {
         };
     };
 
+    $container['notAllowedHandler'] = function () {
+        return function ($request, $response){
+            return Response::notAllowed($response);
+        };
+    };
+
     $container['phpErrorHandler'] = function () {
         return function ($request, $response){
             return Response::internalError($response);
