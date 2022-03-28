@@ -18,8 +18,8 @@ In .env file you can set custom ports for services:
 - Redis (default: 6379)
 
 For the Spotify API to work it is necessary to set the values inside the services/.env file:
-- CLIENT_ID
-- CLIENT_SECRET
+- SPOTIFY_CLIENT_ID
+- SPOTIFY_CLIENT_SECRET
 
 ## License
 
