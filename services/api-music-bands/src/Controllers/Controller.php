@@ -4,7 +4,6 @@ namespace MusicBands\Controllers;
 use MusicBands\Exceptions\PublicException;
 use MusicBands\Traits\ApiResponse;
 use Psr\Container\ContainerInterface;
-use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
 abstract class Controller

@@ -55,8 +55,7 @@ abstract class ApiClient
 
             return json_decode($json);
         } catch( \Throwable $ex) {
-            // ADD LOG TOOL
-//            \Log::error(__FUNCTION__.':'.$ex->getMessage(), ['requestParams' => $requestParams]);
+            // TODO agregar log
             throw $ex;
         }
     }

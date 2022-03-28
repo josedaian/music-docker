@@ -23,11 +23,6 @@ class GetAlbumController extends Controller
             return $this->successResponse($response, AlbumApiModeller::collection(
                 MusicApiFactory::allocApiClient(Provider::SPOTIFY)->searchAlbums($band)
             ));
-
-            /**
-             * Reminder: instalar el paquete para manipular el cache con slim para poder cachear el tiempo de expiracion del token de spotify
-             * En caso de que expire, volvemos a pegar el api de generacion de tokens
-             */
         });
     }
 }
